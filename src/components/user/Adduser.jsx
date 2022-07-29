@@ -28,7 +28,7 @@ import configapi from '../../config/configapi'
 function Adduser({ isModalVisible, showModal, get_Alluser, allUser, getId }) {
   const URL_HOST = `${configapi.API_SERVER}`;
   // const URL_HOST = `${process.env.REACT_APP_NODE_HOST_URL}`;
-  const [datePicker, setDatePicker] = useState("");
+  const [datePicker, setDatePicker] = useState(null);
   const [statusIndex, setStatusIndex] = useState(-1);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -39,6 +39,9 @@ function Adduser({ isModalVisible, showModal, get_Alluser, allUser, getId }) {
 
   const [imageprofileBackup, setImageprofileBackup] = useState({});
   const [imagedrivingBackup, setImagedrivingBackup] = useState({});
+
+  const [checkimage1,setCheckimage1] = useState(false);
+  const [checkimage2,setCheckimage2] = useState(false);
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const [imagePreviewUrlDriving, setImagePreviewUrlDriving] = useState(null);
@@ -66,11 +69,13 @@ function Adduser({ isModalVisible, showModal, get_Alluser, allUser, getId }) {
     reader.onloadend = () => {
       setImageprofile(file);
       setImagePreviewUrl(reader.result);
+      setCheckimage1(true);
     };
     reader.readAsDataURL(file);
   };
 
   const handleDelImage = (e) => {
+    setCheckimage1(true);
     setImageprofile({});
     setImagePreviewUrl(null);
   };
@@ -81,6 +86,7 @@ function Adduser({ isModalVisible, showModal, get_Alluser, allUser, getId }) {
     reader.onloadend = () => {
       setImagedriving(file);
       setImagePreviewUrlDriving(reader.result);
+      setCheckimage2(true);
     };
     reader.readAsDataURL(file);
   };
@@ -88,6 +94,7 @@ function Adduser({ isModalVisible, showModal, get_Alluser, allUser, getId }) {
   const handleDelImageDriving = (e) => {
     setImagedriving({});
     setImagePreviewUrlDriving(null);
+    setCheckimage2(true);
   };
 
   const setForm = (findone) => {
@@ -148,7 +155,7 @@ function Adduser({ isModalVisible, showModal, get_Alluser, allUser, getId }) {
     formData.append("lastname", lastname === "" ? "" : lastname);
     formData.append("idcard", idcard);
     formData.append("phone", phone);
-    formData.append("birth", datePicker === "" ? "" : datePicker);
+    formData.append("birth", datePicker === "" ? null : datePicker);
     formData.append("setstatusId", statusIndex === "" ? "1" : statusIndex);
     formData.append("use", switchChecked ? 1 : 0);
 
@@ -173,27 +180,29 @@ function Adduser({ isModalVisible, showModal, get_Alluser, allUser, getId }) {
 
   const UpdateUser = async (e) => {
     try {
-      if (imageprofile !== imageprofileBackup && imageprofileBackup !== null) {
+      if (checkimage1&&imageprofileBackup!==null) {
         let string = "";
         const array = imageprofileBackup.split("\\");
         string = "./" + array.join("/");
+        console.log("โปรไฟล์");
 
-        await API_URL.post(`api/people/deleteimageprofile`, {
-          id: getId,
-          imageprofileBackup: string,
-        });
+        // await API_URL.post(`api/people/deleteimageprofile`, {
+        //   id: getId,
+        //   imageprofileBackup: string,
+        // });
       }
     } catch (e) {}
     try {
-      if (imagedriving !== imagedrivingBackup && imagedrivingBackup !== null) {
+      if (checkimage2&&imagedrivingBackup!==null) {
         let string = "";
         const array = imagedrivingBackup.split("\\");
         string = "./" + array.join("/");
 
-        await API_URL.post(`api/people/deleteimagedriving`, {
-          id: getId,
-          imagedrivingBackup: string,
-        });
+        console.log("ใบขับขี่",imagedriving,imagedrivingBackup);
+        // await API_URL.post(`api/people/deleteimagedriving`, {
+        //   id: getId,
+        //   imagedrivingBackup: string,
+        // });
       }
     } catch (e) {}
 
@@ -227,7 +236,6 @@ function Adduser({ isModalVisible, showModal, get_Alluser, allUser, getId }) {
         showModal();
         get_Alluser();
         clearForm();
-        // API_URL_form.put(`api/people/updatePeople/${getId}`, formData);
         return res.data;
       })
       .catch((err) => {
