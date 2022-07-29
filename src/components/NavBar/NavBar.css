@@ -1,0 +1,26 @@
+.navbar {
+    background-color: #4D2B68;
+    padding-left: 2rem;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+  }
+  .ant-btn-primary {
+    color: #fff;
+    border-color: #4D2B68;
+    background: #4D2B68;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+  @media (min-width: 992px) {
+    .menu1 {
+      display: none;
+      
+
+    }
+  }
+  .logo {
+    display: block;
+    height: 60px;
+    margin-left: 1rem;
+  }

@@ -1,0 +1,12 @@
+.sidebar {
+    margin-right: 0px;
+    background-color: #CFC5DD;
+ 
+  }
+  .ant-menu-root.ant-menu-vertical, .ant-menu-root.ant-menu-vertical-left, .ant-menu-root.ant-menu-vertical-right, .ant-menu-root.ant-menu-inline {
+    box-shadow: none;
+    background-color: #CFC5DD;
+}
+.content {
+  padding: 10px;
+}
